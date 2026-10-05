@@ -1,0 +1,222 @@
+* {
+    font-family: 'JetBrains Mono', monospace;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #F0F0F0;
+}
+
+/* =========
+    Header
+============ */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FFFFFF;
+    border-bottom: solid 2px #BBBBBB;
+    padding: 1rem;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.direita {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+#btnEntrar {
+    background-color: #FFFFFF;
+    padding: 5px;
+    cursor: pointer;
+}
+
+    #btnEntrar:hover {
+        background-color: #333333;
+        color: #FFFFFF;
+    }
+
+/* ======== 
+    Corpo
+=========== */
+.content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 100px;
+}
+
+.maior {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.subheader {
+    border-bottom: dotted 1px #BBBBBB;
+    padding-bottom: 10px;
+}
+
+.leve {
+    color: #888888;
+}
+
+.altura {
+    margin: 5px 0;
+}
+
+/* =====================
+    Área dos Filtros
+======================== */
+.filtros {
+    background-color: #E8E8E8;
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    border: solid 1px #888888;
+    padding: 20px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1 1 190px;
+}
+
+label {
+    font-size: 12px;
+}
+
+.campoInteracao {
+    width: 100%;
+    height: 44px;
+    padding: 0 10px;
+}
+
+#btn-filtro {
+    background-color: #FFFFFF;
+    height: 44px;
+    padding: 0 20px;
+    cursor: pointer;
+    flex: 1 1 100px;
+}
+
+    #btn-filtro:hover {
+        background-color: #333333;
+        color: #FFFFFF;
+    }
+
+/* =============== 
+    Resultados
+================== */
+.listaMentores {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.mentor {
+    background-color: #E8E8E8;
+    padding: 20px;
+    border: 1px solid #808080;
+    flex: 1 1 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.topoMentor {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.mentorFoto {
+    background-color: #D4D4D4;
+    border: 2px solid #BBBBBB;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.dados {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.nome {
+    font-weight: bold;
+}
+
+.espacado {
+    display: flex;
+    gap: 15px;
+}
+
+.menor {
+    font-size: small;
+}
+
+/* ==========================
+    Tags de especialidade
+============================= */
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.especialidade {
+    background-color: #FFFFFF;
+    border: 1px solid #999999;
+    color: #555555;
+    padding: 4px 8px;
+    font-size: 11px;
+}
+
+/* ===================
+    Botões do Card
+====================== */
+.btnFichaMentor {
+    display: flex;
+    gap: 10px;
+}
+
+.verPerfil, .agendar {
+    flex: 1;
+    border: 2px solid #666666;
+    height: 40px;
+    cursor: pointer;
+}
+
+.verPerfil {
+    background-color: #FFFFFF;
+    color: #333333;
+}
+
+    .verPerfil:hover {
+        background-color: #33333350;
+        color: #FFFFFF;
+    }
+
+.agendar {
+    background-color: #333333;
+    color: #FFFFFF;
+}
+
+    .agendar:hover {
+        background-color: #33333350;
+        color: #333333;
+    }
