@@ -36,10 +36,10 @@ header {
     cursor: pointer;
 }
 
-    #btnEntrar:hover {
-        background-color: #333333;
-        color: #FFFFFF;
-    }
+#btnEntrar:hover {
+    background-color: #333333;
+    color: #FFFFFF;
+}
 
 /* ======== 
     Corpo
@@ -108,10 +108,16 @@ label {
     flex: 1 1 100px;
 }
 
-    #btn-filtro:hover {
-        background-color: #333333;
-        color: #FFFFFF;
-    }
+#btn-filtro:hover {
+    background-color: #333333;
+    color: #FFFFFF;
+}
+select.campoSelect:has(option[value=""]:checked) {
+    color: #888888 !important;
+}
+option:not(:first-child) {
+    color: #000000;
+}
 
 /* =============== 
     Resultados
@@ -206,17 +212,17 @@ label {
     color: #333333;
 }
 
-    .verPerfil:hover {
-        background-color: #33333350;
-        color: #FFFFFF;
-    }
+.verPerfil:hover {
+    background-color: #33333350;
+    color: #FFFFFF;
+}
 
 .agendar {
     background-color: #333333;
     color: #FFFFFF;
 }
 
-    .agendar:hover {
-        background-color: #33333350;
-        color: #333333;
-    }
+.agendar:hover {
+    background-color: #33333350;
+    color: #333333;
+}

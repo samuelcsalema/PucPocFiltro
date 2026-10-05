@@ -14,6 +14,10 @@ public class UsuariosController : Controller
     // GET: USUARIOS
     public async Task<IActionResult> Index()    
     {
+        ViewBag.Areas = await _context.AreasConhecimento.ToListAsync();
+
+        ViewBag.Tecnologias = await _context.Tecnologias.ToListAsync();
+
         var usuarios = await _context.Usuarios
             .Include(u => u.NivelAcesso)
             .Include(u => u.Mentorado)

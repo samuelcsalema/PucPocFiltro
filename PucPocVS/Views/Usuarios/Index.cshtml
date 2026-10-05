@@ -39,22 +39,35 @@
             </div>
             <div class="campo">
                 <label>Área de Conhecimento</label>
-                <input class="campoInteracao" type="text" placeholder="Área de Conhecimento">
+                <select class="campoInteracao campoSelect">
+                    <option class="opcaoDesativada" value="" disabled selected>Área de Conhecimento</option>
+                    @foreach (var area in ViewBag.Areas)
+                         {
+                            <option value="@area.IdArea">@area.Nome</option>
+                         }
+                    </select>
             </div>
             <div class="campo">
                 <label>Tecnologia</label>
-                <input class="campoInteracao" type="text" placeholder="Tecnologia">
+                <select class="campoInteracao campoSelect">
+                    <option class="opcaoDesativada" value="" disabled selected>Tecnologia</option>
+                    @foreach (var tecnologia in ViewBag.Tecnologias)
+                         {
+                            <option value="@tecnologia.IdTecnologia">@tecnologia.Nome</option>
+                         }
+
+                </select>
             </div>
             <div class="campo">
                 <label>Disponibilidade</label>
-                <select class="campoInteracao">
-                    <option class="opcao-desativada" value="" disabled selected>Disponibilidade</option>
+                <select class="campoInteracao campoSelect">
+                    <option class="opcaoDesativada" value="" disabled selected>Disponibilidade</option> <!-- Popular de forma dinâmica -->
                 </select>
             </div>
             <button id="btn-filtro">Filtrar</button>
         </div>
 
-        <p class="leve menor altura">20 mentores encontrados</p>
+        <p class="leve menor altura">20 mentores encontrados</p> <!-- Alterar de forma dinâmica (contar quantos resultados chegaram) -->
                 <main class="resultados">
                     <div class="listaMentores">
                     @foreach (var item in Model)
