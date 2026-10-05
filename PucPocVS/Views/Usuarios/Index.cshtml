@@ -32,30 +32,43 @@
             <p class="leve">Listagem e filtros</p>
         </div>
 
-        <div class="filtros">
+        <form method="GET" asp-action="Index" class="filtros">
             <div class="campo">
                 <label>Buscar por nome ou Especialidade</label>
-                <input class="campoInteracao" type="text" placeholder="Busca por Nome...">
+                <input class="campoInteracao" type="text" name="buscaNome" placeholder="Busca por Nome..." value="@ViewBag.BuscaNomeAtual">
             </div>
             <div class="campo">
                 <label>Área de Conhecimento</label>
-                <select class="campoInteracao campoSelect">
-                    <option class="opcaoDesativada" value="" disabled selected>Área de Conhecimento</option>
+                <select class="campoInteracao campoSelect" name="idArea">
+                    <option class="opcaoDesativada" value="" selected>Área de Conhecimento</option>
                     @foreach (var area in ViewBag.Areas)
-                         {
+                    {
+                        @if (area.IdArea == ViewBag.AreaAtual)
+                        {
+                            <option value="@area.IdArea" selected>@area.Nome</option>
+                        }
+                        else
+                        {
                             <option value="@area.IdArea">@area.Nome</option>
-                         }
+                        }
+                    }
                     </select>
             </div>
             <div class="campo">
                 <label>Tecnologia</label>
-                <select class="campoInteracao campoSelect">
-                    <option class="opcaoDesativada" value="" disabled selected>Tecnologia</option>
+                <select class="campoInteracao campoSelect" name="idTecnologia">
+                    <option class="opcaoDesativada" value="" selected>Tecnologia</option>
                     @foreach (var tecnologia in ViewBag.Tecnologias)
-                         {
+                    {
+                        @if (tecnologia.IdTecnologia == ViewBag.TecnologiaAtual)
+                        {
+                            <option value="@tecnologia.IdTecnologia" selected>@tecnologia.Nome</option>
+                        }
+                        else
+                        {
                             <option value="@tecnologia.IdTecnologia">@tecnologia.Nome</option>
-                         }
-
+                        }
+                    }
                 </select>
             </div>
             <div class="campo">
@@ -64,42 +77,42 @@
                     <option class="opcaoDesativada" value="" disabled selected>Disponibilidade</option> <!-- Popular de forma dinâmica -->
                 </select>
             </div>
-            <button id="btn-filtro">Filtrar</button>
-        </div>
+            <button type="submit" id="btn-filtro">Filtrar</button>
+        </form>
 
-        <p class="leve menor altura">20 mentores encontrados</p> <!-- Alterar de forma dinâmica (contar quantos resultados chegaram) -->
+        <p class="leve menor altura">@ViewBag.Contador mentores encontrados</p> <!-- Alterar de forma dinâmica (contar quantos resultados chegaram) -->
                 <main class="resultados">
                     <div class="listaMentores">
                     @foreach (var item in Model)
-                        {
-                        <div class="mentor">
-                            <div class="topoMentor">
-                                <div class="mentorFoto">Foto</div>
-                                <div class="dados">
-                                    <p class="nome">
-                                        @Html.DisplayFor(model => item.Nome)
-                                    </p>
-                                    <p class="leve menor">
-                                        @string.Join(" | ", item.Mentor.MentorAreas.Select(a => a.AreaConhecimento.Nome))
+                    {
+                    <div class="mentor">
+                        <div class="topoMentor">
+                            <div class="mentorFoto">Foto</div>
+                            <div class="dados">
+                                <p class="nome">
+                                    @Html.DisplayFor(model => item.Nome)
                                 </p>
-                                    <p class="leve menor"></p>
-                                    <div class="leve linha espacado menor"><p>4.9★</p><p>120 sessões</p></div>
-                                </div>
-                            </div>
-                            <div class="tags-container">
-                                @foreach (var tecnologia in item.Mentor.MentorTecnologias)
-                                {
-                                    <span class="especialidade">
-                                        @tecnologia.Tecnologia.Nome
-                                    </span>
-                                }
-                            </div>
-                            <div class="btnFichaMentor">
-                                <button class="verPerfil">Ver Perfil</button>
-                                <button class="agendar">Agendar</button>
+                                <p class="leve menor">
+                                    @string.Join(" | ", item.Mentor.MentorAreas.Select(a => a.AreaConhecimento.Nome))
+                            </p>
+                                <p class="leve menor"></p>
+                                <div class="leve linha espacado menor"><p>4.9★</p><p>120 sessões</p></div>
                             </div>
                         </div>
-                        }
+                        <div class="tags-container">
+                            @foreach (var tecnologia in item.Mentor.MentorTecnologias)
+                            {
+                                <span class="especialidade">
+                                    @tecnologia.Tecnologia.Nome
+                                </span>
+                            }
+                        </div>
+                        <div class="btnFichaMentor">
+                            <button class="verPerfil">Ver Perfil</button>
+                            <button class="agendar">Agendar</button>
+                        </div>
+                    </div>
+                    }
                     </div>
                 </main>
         </div>

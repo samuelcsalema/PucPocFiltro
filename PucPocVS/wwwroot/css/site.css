@@ -118,6 +118,9 @@ select.campoSelect:has(option[value=""]:checked) {
 option:not(:first-child) {
     color: #000000;
 }
+.opcaoDesativada {
+    color: #888888 !important;
+}
 
 /* =============== 
     Resultados

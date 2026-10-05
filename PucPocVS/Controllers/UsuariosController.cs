@@ -12,24 +12,44 @@ public class UsuariosController : Controller
     }
 
     // GET: USUARIOS
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index(string buscaNome, int? idArea, int? idTecnologia)    
     {
+        ViewBag.BuscaNomeAtual = buscaNome;
+        ViewBag.AreaAtual = idArea;
+        ViewBag.TecnologiaAtual = idTecnologia;
+
         ViewBag.Areas = await _context.AreasConhecimento.ToListAsync();
 
         ViewBag.Tecnologias = await _context.Tecnologias.ToListAsync();
 
-        var usuarios = await _context.Usuarios
+        IQueryable<Usuario> query = _context.Usuarios
             .Include(u => u.NivelAcesso)
             .Include(u => u.Mentorado)
             .Include(u => u.Mentor)
-                .ThenInclude(m => m.MentorTecnologias)
+                .ThenInclude(t => t.MentorTecnologias)
                     .ThenInclude(mt => mt.Tecnologia)
             .Include(u => u.Mentor)
                 .ThenInclude(a => a.MentorAreas)
-                    .ThenInclude(ma => ma.AreaConhecimento)
-            .ToListAsync();
+                    .ThenInclude(ma => ma.AreaConhecimento);
 
-        return View(usuarios);
+        if (!string.IsNullOrEmpty(buscaNome))
+        {
+            query = query.Where(u => u.Nome.Contains(buscaNome));
+        }
+        if (idArea.HasValue)
+        {
+            query = query.Where(u => u.Mentor.MentorAreas.Any(a => a.IdArea == idArea.Value));
+        }
+        if (idTecnologia.HasValue)
+        {
+            query = query.Where(u => u.Mentor.MentorTecnologias.Any(t => t.IdTecnologia == idTecnologia.Value));
+        }
+
+        var usuariosFiltrados = await query.ToArrayAsync();
+
+        ViewBag.Contador = usuariosFiltrados.Length;
+
+        return View(usuariosFiltrados);
     }
 
     // GET: USUARIOS/Details/5
