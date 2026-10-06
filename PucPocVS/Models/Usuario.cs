@@ -266,7 +266,7 @@ namespace PucPocVS.Models
         public int IdMentorado { get; set; }
         // Nota da Avaliação da Mentoria
         [Required(ErrorMessage = "A nota é obrigatória.")]
-        public float Nota { get; set; }
+        public decimal Nota { get; set; }
         // Comentário da Avaliação da Mentoria
         public string Comentario { get; set; }
         // Relacionamentos de Navegação
@@ -290,7 +290,7 @@ namespace PucPocVS.Models
         public int IdMentoria { get; set; }
         // Nota da Avaliação do Mentor
         [Required(ErrorMessage = "A nota é obrigatória.")]
-        public float Nota { get; set; }
+        public decimal Nota { get; set; }
         // Comentário da Avaliação do Mentor
         public string Comentario { get; set; }
         // Relacionamentos de Navegação
@@ -314,7 +314,7 @@ namespace PucPocVS.Models
         public int IdMentorado { get; set; }
         // Nota da Avaliação do Material de Apoio
         [Required(ErrorMessage = "A nota é obrigatória.")]
-        public float Nota { get; set; }
+        public decimal Nota { get; set; }
         // Comentário da Avaliação do Material de Apoio
         public string Comentario { get; set; }
         // Relacionamentos de Navegação
