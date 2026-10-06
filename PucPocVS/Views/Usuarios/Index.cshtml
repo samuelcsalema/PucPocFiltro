@@ -73,14 +73,28 @@
             </div>
             <div class="campo">
                 <label>Disponibilidade</label>
-                <select class="campoInteracao campoSelect">
-                    <option class="opcaoDesativada" value="" disabled selected>Disponibilidade</option> <!-- Popular de forma dinâmica -->
+                <select class="campoInteracao campoSelect" name="horaDisponibilidade">
+                    <option class="opcaoDesativada" value="" selected>Disponibilidade</option>
+                    @foreach (DateTime disponibilidade in ViewBag.Disponibilidades)
+                    {
+                        var horaFormatada = disponibilidade.ToString("yyyy-MM-ddTHH:mm:ss");
+                        var selecionado = ViewBag.DisponibilidadeAtual != null &&
+                            ((DateTime)ViewBag.DisponibilidadeAtual).ToString("yyyy-MM-ddTHH:mm:ss") == horaFormatada;
+                        if (selecionado)
+                        {
+                            <option value="@horaFormatada" selected>@disponibilidade.ToString("dd/MM - HH:mm")</option>
+                        }
+                        else
+                        {
+                            <option value="@horaFormatada">@disponibilidade.ToString("dd/MM - HH:mm")</option>
+                        }
+                    }
                 </select>
             </div>
             <button type="submit" id="btn-filtro">Filtrar</button>
         </form>
 
-        <p class="leve menor altura">@ViewBag.Contador mentores encontrados</p> <!-- Alterar de forma dinâmica (contar quantos resultados chegaram) -->
+        <p class="leve menor altura">@ViewBag.Contador mentores encontrados</p>
         <main class="resultados">
             <div class="listaMentores">
                 @foreach (var item in Model)

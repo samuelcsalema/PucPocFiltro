@@ -12,17 +12,27 @@ public class UsuariosController : Controller
     }
 
     // GET: USUARIOS
-    public async Task<IActionResult> Index(string buscaNome, int? idArea, int? idTecnologia)    
+    public async Task<IActionResult> Index(string buscaNome, int? idArea, int? idTecnologia, DateTime? horaDisponibilidade)    
     {
         ViewBag.BuscaNomeAtual = buscaNome;
         ViewBag.AreaAtual = idArea;
         ViewBag.TecnologiaAtual = idTecnologia;
+        ViewBag.DisponibilidadeAtual = horaDisponibilidade;
 
         ViewBag.Areas = await _context.AreasConhecimento.ToListAsync();
 
         ViewBag.Tecnologias = await _context.Tecnologias.ToListAsync();
 
+        ViewBag.Disponibilidades = await _context.Disponibilidades
+            .Where(d => d.Disponivel == true && d.HoraInicio >= DateTime.Now)
+            .Select(d => d.HoraInicio)
+            .Distinct()
+            .OrderBy(h => h)
+            .ToListAsync();
+
         IQueryable<Usuario> query = _context.Usuarios
+            .Where(u => u.PerfilAtivo == true)
+            .Where(u => u.Mentor != null)
             .Include(u => u.NivelAcesso)
             .Include(u => u.Mentorado)
             .Include(u => u.Mentor)
@@ -30,7 +40,9 @@ public class UsuariosController : Controller
                     .ThenInclude(mt => mt.Tecnologia)
             .Include(u => u.Mentor)
                 .ThenInclude(a => a.MentorAreas)
-                    .ThenInclude(ma => ma.AreaConhecimento);
+                    .ThenInclude(ma => ma.AreaConhecimento)
+            .Include(u => u.Mentor)
+                .ThenInclude(d => d.Disponibilidades);
 
         if (!string.IsNullOrEmpty(buscaNome))
         {
@@ -43,6 +55,18 @@ public class UsuariosController : Controller
         if (idTecnologia.HasValue)
         {
             query = query.Where(u => u.Mentor.MentorTecnologias.Any(t => t.IdTecnologia == idTecnologia.Value));
+        }
+        if (horaDisponibilidade.HasValue)
+        {
+            var h = horaDisponibilidade.Value;
+            query = query.Where(u => u.Mentor.Disponibilidades.Any(d =>
+                d.Disponivel == true &&
+                d.HoraInicio.Year == h.Year &&
+                d.HoraInicio.Month == h.Month &&
+                d.HoraInicio.Day == h.Day &&
+                d.HoraInicio.Hour == h.Hour &&
+                d.HoraInicio.Minute == h.Minute
+            ));
         }
 
         var usuariosFiltrados = await query.ToArrayAsync();
