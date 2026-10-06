@@ -17,6 +17,10 @@ namespace PucPocVS.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+            }
             modelBuilder.Entity<NivelAcesso>().HasData(
                 new NivelAcesso { IdNivelAcesso = 1, Descricao = "Administrador" },
                 new NivelAcesso { IdNivelAcesso = 2, Descricao = "Mentor" },

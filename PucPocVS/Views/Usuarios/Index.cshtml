@@ -34,7 +34,7 @@
 
         <form method="GET" asp-action="Index" class="filtros">
             <div class="campo">
-                <label>Buscar por Nome</label>
+                <label>Buscar por nome</label>
                 <input class="campoInteracao" type="text" name="buscaNome" placeholder="Nome" value="@ViewBag.BuscaNomeAtual">
             </div>
             <div class="campo">
@@ -52,7 +52,7 @@
                             <option value="@area.IdArea">@area.Nome</option>
                         }
                     }
-                    </select>
+                </select>
             </div>
             <div class="campo">
                 <label>Tecnologia</label>
@@ -81,10 +81,10 @@
         </form>
 
         <p class="leve menor altura">@ViewBag.Contador mentores encontrados</p> <!-- Alterar de forma dinâmica (contar quantos resultados chegaram) -->
-                <main class="resultados">
-                    <div class="listaMentores">
-                    @foreach (var item in Model)
-                    {
+        <main class="resultados">
+            <div class="listaMentores">
+                @foreach (var item in Model)
+                {
                     <div class="mentor">
                         <div class="topoMentor">
                             <div class="mentorFoto">Foto</div>
@@ -94,7 +94,7 @@
                                 </p>
                                 <p class="leve menor">
                                     @string.Join(" | ", item.Mentor.MentorAreas.Select(a => a.AreaConhecimento.Nome))
-                            </p>
+                                </p>
                                 <p class="leve menor"></p>
                                 <div class="leve linha espacado menor"><p>4.9★</p><p>120 sessões</p></div>
                             </div>
@@ -112,9 +112,9 @@
                             <button class="agendar">Agendar</button>
                         </div>
                     </div>
-                    }
-                    </div>
-                </main>
-        </div>
+                }
+            </div>
+        </main>
+    </div>
 </body>
 </html>
