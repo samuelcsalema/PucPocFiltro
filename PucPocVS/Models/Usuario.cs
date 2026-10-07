@@ -80,6 +80,7 @@ namespace PucPocVS.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int IdUsuario { get; set; }
+        public string NotaMedia { get; set; }
         // Foreign Key para a tabela Usuario
         [ForeignKey("IdUsuario")]
         public Usuario Usuario { get; set; }
@@ -88,6 +89,8 @@ namespace PucPocVS.Models
         public ICollection<MentorTecnologia> MentorTecnologias { get; set; }
         public ICollection<Disponibilidade> Disponibilidades { get; set; }
         public ICollection<AvaliacaoMentor> AvaliacoesMentores { get; set; }
+        public ICollection<Mentoria> Mentorias { get; set; }
+        public ICollection<MaterialDeApoio> MateriaisDeApoio { get; set; }
     }
     // Tabela Das Áreas de Conhecimento
     [Table("AreasConhecimento")]

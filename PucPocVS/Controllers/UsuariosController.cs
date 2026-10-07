@@ -12,7 +12,7 @@ public class UsuariosController : Controller
     }
 
     // GET: USUARIOS
-    public async Task<IActionResult> Index(string buscaNome, int? idArea, int? idTecnologia, DateTime? horaDisponibilidade)    
+    public async Task<IActionResult> Index(string buscaNome, int? idArea, int? idTecnologia, DateTime? horaDisponibilidade)
     {
         ViewBag.BuscaNomeAtual = buscaNome;
         ViewBag.AreaAtual = idArea;
@@ -42,7 +42,43 @@ public class UsuariosController : Controller
                 .ThenInclude(a => a.MentorAreas)
                     .ThenInclude(ma => ma.AreaConhecimento)
             .Include(u => u.Mentor)
-                .ThenInclude(d => d.Disponibilidades);
+                .ThenInclude(d => d.Disponibilidades)
+            .Include(u => u.Mentor)
+                .ThenInclude(m => m.Mentorias)
+                    .ThenInclude(nm => nm.AvaliacoesMentoria)
+            .Include(u => u.Mentor)
+                .ThenInclude(m => m.MateriaisDeApoio)
+                    .ThenInclude(nm => nm.AvaliacoesMateriais)
+            .Include(u => u.Mentor)
+                .ThenInclude(m => m.AvaliacoesMentores);
+
+        List<Usuario> listaUsarios = await query.ToListAsync();
+
+        foreach (var usuario in listaUsarios)
+        {
+            var mentor = usuario.Mentor;
+            decimal mediaMentor = mentor.AvaliacoesMentores.Any()
+                ? usuario.Mentor.AvaliacoesMentores.Average(m => (decimal)m.Nota)
+                : 0;
+            var avaliacoesMateriais = mentor.MateriaisDeApoio.SelectMany(m => m.AvaliacoesMateriais);
+            decimal mediaMaterias = avaliacoesMateriais.Any()
+                ? avaliacoesMateriais.Average(m => (decimal)m.Nota)
+                : 0;
+            var avaliacoesMentorias = mentor.Mentorias.SelectMany(m => m.AvaliacoesMentoria);
+            decimal mediaMentoria = avaliacoesMentorias.Any()
+                ? avaliacoesMentorias.Average(m => (decimal)m.Nota)
+                : 0;
+
+            var mediasValidas = new List<decimal>();
+            if (mediaMentor > 0) mediasValidas.Add(mediaMentor);
+            if (mediaMaterias > 0) mediasValidas.Add(mediaMaterias);
+            if (mediaMentoria > 0) mediasValidas.Add(mediaMentoria);
+            decimal mediaGeralMentor = mediasValidas.Any()
+                ? mediasValidas.Average()
+                : 0;
+            string estrelaCard = $"{Math.Round(mediaGeralMentor, 1)}";
+            usuario.Mentor.NotaMedia = estrelaCard;
+        }
 
         if (!string.IsNullOrEmpty(buscaNome))
         {
