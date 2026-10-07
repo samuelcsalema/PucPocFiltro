@@ -56,6 +56,7 @@ public class UsuariosController : Controller
 
         foreach (var usuario in listaUsarios)
         {
+            // Média de notas
             var mentor = usuario.Mentor;
             decimal mediaMentor = mentor.AvaliacoesMentores.Any()
                 ? usuario.Mentor.AvaliacoesMentores.Average(m => (decimal)m.Nota)
@@ -78,6 +79,9 @@ public class UsuariosController : Controller
                 : 0;
             string estrelaCard = $"{Math.Round(mediaGeralMentor, 1)}";
             usuario.Mentor.NotaMedia = estrelaCard;
+            // Total de Sessões
+            mentor.TotalSessoes = mentor.Mentorias
+                .Count(s => s.Status == "Concluída");
         }
 
         if (!string.IsNullOrEmpty(buscaNome))

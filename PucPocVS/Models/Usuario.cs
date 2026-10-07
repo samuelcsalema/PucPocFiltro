@@ -80,7 +80,10 @@ namespace PucPocVS.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int IdUsuario { get; set; }
+        [NotMapped]
         public string NotaMedia { get; set; }
+        [NotMapped]
+        public int TotalSessoes { get; set; }
         // Foreign Key para a tabela Usuario
         [ForeignKey("IdUsuario")]
         public Usuario Usuario { get; set; }
