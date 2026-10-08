@@ -59,7 +59,7 @@ namespace PucPocVS.Models
     {
         // ID do Mentorado (Primary Key)
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)] // Indica que o valor da chave primária não será gerado pelo banco de dados
         public int IdUsuario { get; set; }
         // Área de Interesse do Mentorado
         [Required(ErrorMessage = "Área de Interesse é obrigatória.")]
@@ -78,8 +78,9 @@ namespace PucPocVS.Models
     {
         // ID do Mentor (Primary Key)
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)] // Indica que o valor da chave primária não será gerado pelo banco de dados
         public int IdUsuario { get; set; }
+        // Criando a Nota Média e Total de Sessões como propriedades calculadas e Colunas não mapeadas no banco de dados
         [NotMapped]
         public string NotaMedia { get; set; }
         [NotMapped]

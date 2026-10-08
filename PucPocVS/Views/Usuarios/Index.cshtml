@@ -31,7 +31,7 @@
             <p class="maior">Busca de Mentores</p>
             <p class="leve">Listagem e filtros</p>
         </div>
-
+        <!-- Filtros -->
         <form method="GET" asp-action="Index" class="filtros">
             <div class="campo">
                 <label>Buscar por nome</label>
@@ -75,6 +75,7 @@
                 <label>Disponibilidade</label>
                 <select class="campoInteracao campoSelect" name="horaDisponibilidade">
                     <option class="opcaoDesativada" value="" selected>Disponibilidade</option>
+                    <!-- Loop pelas disponibilidades e exibe as opções -->
                     @foreach (DateTime disponibilidade in ViewBag.Disponibilidades)
                     {
                         var horaFormatada = disponibilidade.ToString("yyyy-MM-ddTHH:mm:ss");
@@ -93,10 +94,11 @@
             </div>
             <button type="submit" id="btn-filtro">Filtrar</button>
         </form>
-
+        <!-- Resultados -->
         <p class="leve menor altura">@ViewBag.Contador mentores encontrados</p>
         <main class="resultados">
             <div class="listaMentores">
+                <!-- Loop pelos mentores e exibe suas informações -->
                 @foreach (var item in Model)
                 {
                     <div class="mentor">
@@ -104,16 +106,20 @@
                             <div class="mentorFoto">Foto</div>
                             <div class="dados">
                                 <p class="nome">
+                                    <!-- Nome do Mentor -->
                                     @Html.DisplayFor(model => item.Nome)
                                 </p>
                                 <p class="leve menor">
+                                    <!-- Áreas de Conhecimento -->
                                     @string.Join(" | ", item.Mentor.MentorAreas.Select(a => a.AreaConhecimento.Nome))
                                 </p>
                                 <p class="leve menor"></p>
+                                <!-- Nota média e total de sessões do mentor -->
                                 <div class="leve linha espacado menor"><p> @item.Mentor.NotaMedia ★</p><p>@item.Mentor.TotalSessoes sessões</p></div>
                             </div>
                         </div>
                         <div class="tags-container">
+                            <!-- Exibe as tecnologias do mentor -->
                             @foreach (var tecnologia in item.Mentor.MentorTecnologias)
                             {
                                 <span class="especialidade">

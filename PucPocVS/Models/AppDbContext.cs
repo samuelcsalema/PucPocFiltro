@@ -6,6 +6,7 @@ namespace PucPocVS.Models
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        // Definição das propriedades DbSet para cada entidade do modelo
         public DbSet<NivelAcesso> NiveisAcesso { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Mentorado> Mentorados { get; set; }
@@ -21,18 +22,23 @@ namespace PucPocVS.Models
         public DbSet<AvaliacaoMentoria> AvaliacoesMentoria { get; set; }
         public DbSet<Anotacao> Anotacoes { get; set; }
         public DbSet<Mentoria> Mentorias { get; set; }
+        // Sobrescrevendo o método OnModelCreating para configurar o modelo e definir os dados iniciais
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configurações adicionais do modelo podem ser feitas aqui, como relacionamentos, restrições, etc.
             base.OnModelCreating(modelBuilder);
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
+                // Definindo o comportamento de exclusão para todas as chaves estrangeiras como Restrict
                 foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
             }
+            // Definindo dados iniciais para a tabela NivelAcesso
             modelBuilder.Entity<NivelAcesso>().HasData(
                 new NivelAcesso { IdNivelAcesso = 1, Descricao = "Administrador" },
                 new NivelAcesso { IdNivelAcesso = 2, Descricao = "Mentor" },
                 new NivelAcesso { IdNivelAcesso = 3, Descricao = "Mentorado" }
             );
+            // Definindo dados iniciais para a tabela Tecnologia
             modelBuilder.Entity<Tecnologia>().HasData(
                 new Tecnologia { IdTecnologia = 1, Nome = "Python" },
                 new Tecnologia { IdTecnologia = 2, Nome = "SQL" },
@@ -48,6 +54,7 @@ namespace PucPocVS.Models
                 new Tecnologia { IdTecnologia = 12, Nome = "R" },
                 new Tecnologia { IdTecnologia = 13, Nome = "PHP" }
             );
+            // Definindo dados iniciais para a tabela AreaConhecimento
             modelBuilder.Entity<AreaConhecimento>().HasData(
                 new AreaConhecimento { IdArea = 1, Nome = "Backend" },
                 new AreaConhecimento { IdArea = 2, Nome = "Frontend" },
@@ -56,6 +63,7 @@ namespace PucPocVS.Models
                 new AreaConhecimento { IdArea = 5, Nome = "Fullstack" },
                 new AreaConhecimento { IdArea = 6, Nome = "Cyber Security" }
             );
+            // Definindo dados iniciais para a tabela Usuario
             modelBuilder.Entity<Usuario>().HasData(
                 CriarUsuario(1, "Carlos Silva", "carlos@email.com", "PG"),
                 CriarUsuario(2, "Mariana Souza", "mariana@email.com", "ES"),
@@ -78,6 +86,7 @@ namespace PucPocVS.Models
                 CriarUsuario(19, "Marcelo Moraes", "marcelo@email.com", "PG"),
                 CriarUsuario(20, "Carolina Azevedo", "carolina@email.com", "ES")
             );
+            // Definindo dados iniciais para a tabela Mentorado
             modelBuilder.Entity<Mentorado>().HasData(
                 new Mentorado { IdUsuario = 1, AreaInteresse = "Backend" },
                 new Mentorado { IdUsuario = 2, AreaInteresse = "Frontend" },
@@ -100,6 +109,7 @@ namespace PucPocVS.Models
                 new Mentorado { IdUsuario = 19, AreaInteresse = "DevOps" },
                 new Mentorado { IdUsuario = 20, AreaInteresse = "Product Management" }
             );
+            // Definindo dados iniciais para a tabela Mentor
             modelBuilder.Entity<Mentor>().HasData(
                 new Mentor { IdUsuario = 1 }, new Mentor { IdUsuario = 2 }, new Mentor { IdUsuario = 3 },
                 new Mentor { IdUsuario = 4 }, new Mentor { IdUsuario = 5 }, new Mentor { IdUsuario = 6 },
@@ -109,6 +119,7 @@ namespace PucPocVS.Models
                 new Mentor { IdUsuario = 16 }, new Mentor { IdUsuario = 17 }, new Mentor { IdUsuario = 18 },
                 new Mentor { IdUsuario = 19 }, new Mentor { IdUsuario = 20 }
             );
+            // Definindo dados iniciais para a tabela MentorAreas
             modelBuilder.Entity<MentorAreas>().HasData(
                 new MentorAreas { IdMentorArea = 1, IdMentor = 1, IdArea = 1 }, // Carlos (Backend)
                 new MentorAreas { IdMentorArea = 2, IdMentor = 2, IdArea = 2 }, // Mariana (Frontend)
@@ -133,6 +144,7 @@ namespace PucPocVS.Models
                 new MentorAreas { IdMentorArea = 21, IdMentor = 3, IdArea = 1 }, // Roberto também ensina Backend
                 new MentorAreas { IdMentorArea = 22, IdMentor = 8, IdArea = 2 }  // Camila também ensina Frontend
             );
+            // Definindo dados iniciais para a tabela MentorTecnologia
             modelBuilder.Entity<MentorTecnologia>().HasData(
                 new MentorTecnologia { IdMentorTecnologia = 1, IdMentor = 1, IdTecnologia = 6 }, // C#
                 new MentorTecnologia { IdMentorTecnologia = 2, IdMentor = 1, IdTecnologia = 2 }, // SQL
@@ -181,6 +193,7 @@ namespace PucPocVS.Models
                 new MentorTecnologia { IdMentorTecnologia = 45, IdMentor = 10, IdTecnologia = 2 }, // SQL
                 new MentorTecnologia { IdMentorTecnologia = 46, IdMentor = 8, IdTecnologia = 13 } // PHP
             );
+            // Definindo dados iniciais para a tabela Duracao
             modelBuilder.Entity<Duracao>().HasData(
                 new Duracao { IdDuracao = 1, Tempo = 15 },
                 new Duracao { IdDuracao = 2, Tempo = 30 },
@@ -191,6 +204,7 @@ namespace PucPocVS.Models
                 new Duracao { IdDuracao = 7, Tempo = 105 },
                 new Duracao { IdDuracao = 8, Tempo = 120 }
             );
+            // Definindo dados iniciais para a tabela Usuario (mentores e mentorados)
             modelBuilder.Entity<Usuario>().HasData(
                 CriarUsuarioMentorado(21, "João Pedro Silva", "joao.pedro@email.com", "MC"),
                 CriarUsuarioMentorado(22, "Carlos Alves", "carlos.alves@email.com", "SI"),
@@ -218,6 +232,7 @@ namespace PucPocVS.Models
                 CriarUsuarioMentorado(44, "Felipe Santos", "felipe.santos@email.com", "PG"),
                 CriarUsuarioMentorado(45, "Luiza Ferreira", "luiza.ferreira@email.com", "ES")
             );
+            // Definindo dados iniciais para a tabela Mentorado (mentores e mentorados)
             modelBuilder.Entity<Mentorado>().HasData(
                 new Mentorado { IdUsuario = 21, AreaInteresse = "Backend" },
                 new Mentorado { IdUsuario = 22, AreaInteresse = "Frontend" },
@@ -245,109 +260,111 @@ namespace PucPocVS.Models
                 new Mentorado { IdUsuario = 44, AreaInteresse = "Backend" },
                 new Mentorado { IdUsuario = 45, AreaInteresse = "Frontend" }
             );
-            var randomMentoria = new Random(55);
+            // Definindo dados iniciais para a tabela Mentoria (mentores e mentorados)
+            var randomMentoria = new Random(55); // Usando uma semente fixa para garantir consistência nos dados gerados
             modelBuilder.Entity<Mentoria>().HasData(
-                new Mentoria { IdMentoria = 1, IdMentorado = 21, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 1, 1, 9, 0, 0), Link = "https://meet.mock.com/mentoria-1", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 2, IdMentorado = 22, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 2, 2, 10, 0, 0), Link = "https://meet.mock.com/mentoria-2", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 3, IdMentorado = 23, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 3, 3, 11, 0, 0), Link = "https://meet.mock.com/mentoria-3", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 4, IdMentorado = 24, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 4, 4, 12, 0, 0), Link = "https://meet.mock.com/mentoria-4", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 5, IdMentorado = 25, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 5, 5, 13, 0, 0), Link = "https://meet.mock.com/mentoria-5", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 6, IdMentorado = 26, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 6, 6, 9, 0, 0), Link = "https://meet.mock.com/mentoria-6", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 7, IdMentorado = 27, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 7, 7, 10, 0, 0), Link = "https://meet.mock.com/mentoria-7", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 8, IdMentorado = 28, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 8, 8, 11, 0, 0), Link = "https://meet.mock.com/mentoria-8", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 9, IdMentorado = 29, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 9, 9, 12, 0, 0), Link = "https://meet.mock.com/mentoria-9", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 10, IdMentorado = 30, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 10, 10, 13, 0, 0), Link = "https://meet.mock.com/mentoria-10", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 11, IdMentorado = 31, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 11, 11, 9, 0, 0), Link = "https://meet.mock.com/mentoria-11", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 12, IdMentorado = 32, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 12, 12, 10, 0, 0), Link = "https://meet.mock.com/mentoria-12", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 13, IdMentorado = 33, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 1, 13, 11, 0, 0), Link = "https://meet.mock.com/mentoria-13", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 14, IdMentorado = 34, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 2, 14, 12, 0, 0), Link = "https://meet.mock.com/mentoria-14", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 15, IdMentorado = 35, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 3, 15, 13, 0, 0), Link = "https://meet.mock.com/mentoria-15", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 16, IdMentorado = 36, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 4, 16, 9, 0, 0), Link = "https://meet.mock.com/mentoria-16", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 17, IdMentorado = 37, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 5, 17, 10, 0, 0), Link = "https://meet.mock.com/mentoria-17", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 18, IdMentorado = 38, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 6, 18, 11, 0, 0), Link = "https://meet.mock.com/mentoria-18", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 19, IdMentorado = 39, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 7, 19, 12, 0, 0), Link = "https://meet.mock.com/mentoria-19", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 20, IdMentorado = 40, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 8, 20, 13, 0, 0), Link = "https://meet.mock.com/mentoria-20", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 21, IdMentorado = 41, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 9, 1, 9, 0, 0), Link = "https://meet.mock.com/mentoria-21", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 22, IdMentorado = 42, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 10, 2, 10, 0, 0), Link = "https://meet.mock.com/mentoria-22", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 23, IdMentorado = 43, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 11, 3, 11, 0, 0), Link = "https://meet.mock.com/mentoria-23", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 24, IdMentorado = 44, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 12, 4, 12, 0, 0), Link = "https://meet.mock.com/mentoria-24", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 25, IdMentorado = 45, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 1, 5, 13, 0, 0), Link = "https://meet.mock.com/mentoria-25", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 26, IdMentorado = 21, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 2, 6, 9, 0, 0), Link = "https://meet.mock.com/mentoria-26", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 27, IdMentorado = 22, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 3, 7, 10, 0, 0), Link = "https://meet.mock.com/mentoria-27", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 28, IdMentorado = 23, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 4, 8, 11, 0, 0), Link = "https://meet.mock.com/mentoria-28", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 29, IdMentorado = 24, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 5, 9, 12, 0, 0), Link = "https://meet.mock.com/mentoria-29", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 30, IdMentorado = 25, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 6, 10, 13, 0, 0), Link = "https://meet.mock.com/mentoria-30", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 31, IdMentorado = 26, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 7, 11, 9, 0, 0), Link = "https://meet.mock.com/mentoria-31", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 32, IdMentorado = 27, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 8, 12, 10, 0, 0), Link = "https://meet.mock.com/mentoria-32", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 33, IdMentorado = 28, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 9, 13, 11, 0, 0), Link = "https://meet.mock.com/mentoria-33", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 34, IdMentorado = 29, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 10, 14, 12, 0, 0), Link = "https://meet.mock.com/mentoria-34", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 35, IdMentorado = 30, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 11, 15, 13, 0, 0), Link = "https://meet.mock.com/mentoria-35", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 36, IdMentorado = 31, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 12, 16, 9, 0, 0), Link = "https://meet.mock.com/mentoria-36", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 37, IdMentorado = 32, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 1, 17, 10, 0, 0), Link = "https://meet.mock.com/mentoria-37", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 38, IdMentorado = 33, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 2, 18, 11, 0, 0), Link = "https://meet.mock.com/mentoria-38", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 39, IdMentorado = 34, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 3, 19, 12, 0, 0), Link = "https://meet.mock.com/mentoria-39", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 40, IdMentorado = 35, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 4, 20, 13, 0, 0), Link = "https://meet.mock.com/mentoria-40", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 41, IdMentorado = 36, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 5, 1, 9, 0, 0), Link = "https://meet.mock.com/mentoria-41", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 42, IdMentorado = 37, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 6, 2, 10, 0, 0), Link = "https://meet.mock.com/mentoria-42", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 43, IdMentorado = 38, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 7, 3, 11, 0, 0), Link = "https://meet.mock.com/mentoria-43", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 44, IdMentorado = 39, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 8, 4, 12, 0, 0), Link = "https://meet.mock.com/mentoria-44", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 45, IdMentorado = 40, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 9, 5, 13, 0, 0), Link = "https://meet.mock.com/mentoria-45", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 46, IdMentorado = 41, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 10, 6, 9, 0, 0), Link = "https://meet.mock.com/mentoria-46", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 47, IdMentorado = 42, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 11, 7, 10, 0, 0), Link = "https://meet.mock.com/mentoria-47", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 48, IdMentorado = 43, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 12, 8, 11, 0, 0), Link = "https://meet.mock.com/mentoria-48", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 49, IdMentorado = 44, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 1, 9, 12, 0, 0), Link = "https://meet.mock.com/mentoria-49", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 50, IdMentorado = 45, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 2, 10, 13, 0, 0), Link = "https://meet.mock.com/mentoria-50", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 51, IdMentorado = 21, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 3, 11, 9, 0, 0), Link = "https://meet.mock.com/mentoria-51", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 52, IdMentorado = 22, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 4, 12, 10, 0, 0), Link = "https://meet.mock.com/mentoria-52", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 53, IdMentorado = 23, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 5, 13, 11, 0, 0), Link = "https://meet.mock.com/mentoria-53", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 54, IdMentorado = 24, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 6, 14, 12, 0, 0), Link = "https://meet.mock.com/mentoria-54", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 55, IdMentorado = 25, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 7, 15, 13, 0, 0), Link = "https://meet.mock.com/mentoria-55", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 56, IdMentorado = 26, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 8, 16, 9, 0, 0), Link = "https://meet.mock.com/mentoria-56", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 57, IdMentorado = 27, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 9, 17, 10, 0, 0), Link = "https://meet.mock.com/mentoria-57", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 58, IdMentorado = 28, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 10, 18, 11, 0, 0), Link = "https://meet.mock.com/mentoria-58", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 59, IdMentorado = 29, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 11, 19, 12, 0, 0), Link = "https://meet.mock.com/mentoria-59", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 60, IdMentorado = 30, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 12, 20, 13, 0, 0), Link = "https://meet.mock.com/mentoria-60", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 61, IdMentorado = 31, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 1, 1, 9, 0, 0), Link = "https://meet.mock.com/mentoria-61", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 62, IdMentorado = 32, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 2, 2, 10, 0, 0), Link = "https://meet.mock.com/mentoria-62", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 63, IdMentorado = 33, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 3, 3, 11, 0, 0), Link = "https://meet.mock.com/mentoria-63", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 64, IdMentorado = 34, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 4, 4, 12, 0, 0), Link = "https://meet.mock.com/mentoria-64", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 65, IdMentorado = 35, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 5, 5, 13, 0, 0), Link = "https://meet.mock.com/mentoria-65", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 66, IdMentorado = 36, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 6, 6, 9, 0, 0), Link = "https://meet.mock.com/mentoria-66", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 67, IdMentorado = 37, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 7, 7, 10, 0, 0), Link = "https://meet.mock.com/mentoria-67", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 68, IdMentorado = 38, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 8, 8, 11, 0, 0), Link = "https://meet.mock.com/mentoria-68", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 69, IdMentorado = 39, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 9, 9, 12, 0, 0), Link = "https://meet.mock.com/mentoria-69", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 70, IdMentorado = 40, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 10, 10, 13, 0, 0), Link = "https://meet.mock.com/mentoria-70", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 71, IdMentorado = 41, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 11, 11, 9, 0, 0), Link = "https://meet.mock.com/mentoria-71", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 72, IdMentorado = 42, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 12, 12, 10, 0, 0), Link = "https://meet.mock.com/mentoria-72", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 73, IdMentorado = 43, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 1, 13, 11, 0, 0), Link = "https://meet.mock.com/mentoria-73", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 74, IdMentorado = 44, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 2, 14, 12, 0, 0), Link = "https://meet.mock.com/mentoria-74", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 75, IdMentorado = 45, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 3, 15, 13, 0, 0), Link = "https://meet.mock.com/mentoria-75", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 76, IdMentorado = 21, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 4, 16, 9, 0, 0), Link = "https://meet.mock.com/mentoria-76", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 77, IdMentorado = 22, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 5, 17, 10, 0, 0), Link = "https://meet.mock.com/mentoria-77", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 78, IdMentorado = 23, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 6, 18, 11, 0, 0), Link = "https://meet.mock.com/mentoria-78", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 79, IdMentorado = 24, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 7, 19, 12, 0, 0), Link = "https://meet.mock.com/mentoria-79", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 80, IdMentorado = 25, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 8, 20, 13, 0, 0), Link = "https://meet.mock.com/mentoria-80", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 81, IdMentorado = 26, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 9, 1, 9, 0, 0), Link = "https://meet.mock.com/mentoria-81", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 82, IdMentorado = 27, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 10, 2, 10, 0, 0), Link = "https://meet.mock.com/mentoria-82", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 83, IdMentorado = 28, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 11, 3, 11, 0, 0), Link = "https://meet.mock.com/mentoria-83", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 84, IdMentorado = 29, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 12, 4, 12, 0, 0), Link = "https://meet.mock.com/mentoria-84", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 85, IdMentorado = 30, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 1, 5, 13, 0, 0), Link = "https://meet.mock.com/mentoria-85", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 86, IdMentorado = 31, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 2, 6, 9, 0, 0), Link = "https://meet.mock.com/mentoria-86", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 87, IdMentorado = 32, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 3, 7, 10, 0, 0), Link = "https://meet.mock.com/mentoria-87", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 88, IdMentorado = 33, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 4, 8, 11, 0, 0), Link = "https://meet.mock.com/mentoria-88", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 89, IdMentorado = 34, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 5, 9, 12, 0, 0), Link = "https://meet.mock.com/mentoria-89", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 90, IdMentorado = 35, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 6, 10, 13, 0, 0), Link = "https://meet.mock.com/mentoria-90", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 91, IdMentorado = 36, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 7, 11, 9, 0, 0), Link = "https://meet.mock.com/mentoria-91", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 92, IdMentorado = 37, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 8, 12, 10, 0, 0), Link = "https://meet.mock.com/mentoria-92", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 93, IdMentorado = 38, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 9, 13, 11, 0, 0), Link = "https://meet.mock.com/mentoria-93", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 94, IdMentorado = 39, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 10, 14, 12, 0, 0), Link = "https://meet.mock.com/mentoria-94", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 95, IdMentorado = 40, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 11, 15, 13, 0, 0), Link = "https://meet.mock.com/mentoria-95", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 96, IdMentorado = 41, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 12, 16, 9, 0, 0), Link = "https://meet.mock.com/mentoria-96", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
-                new Mentoria { IdMentoria = 97, IdMentorado = 42, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 1, 17, 10, 0, 0), Link = "https://meet.mock.com/mentoria-97", Descricao = "Revisão de fundamentos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 98, IdMentorado = 43, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 2, 18, 11, 0, 0), Link = "https://meet.mock.com/mentoria-98", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
-                new Mentoria { IdMentoria = 99, IdMentorado = 44, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 3, 19, 12, 0, 0), Link = "https://meet.mock.com/mentoria-99", Descricao = "Análise de projeto", Status = "Concluída" },
-                new Mentoria { IdMentoria = 100, IdMentorado = 45, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2025, 4, 20, 13, 0, 0), Link = "https://meet.mock.com/mentoria-100", Descricao = "Planejamento dos próximos passos", Status = "Concluída" }
+                new Mentoria { IdMentoria = 1, IdMentorado = 21, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 1, 1, 9, 0, 0), Link = "https://meet.mock.com/mentoria-1", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 2, IdMentorado = 22, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 2, 2, 10, 0, 0), Link = "https://meet.mock.com/mentoria-2", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 3, IdMentorado = 23, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 3, 3, 11, 0, 0), Link = "https://meet.mock.com/mentoria-3", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 4, IdMentorado = 24, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 4, 4, 12, 0, 0), Link = "https://meet.mock.com/mentoria-4", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 5, IdMentorado = 25, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 5, 5, 13, 0, 0), Link = "https://meet.mock.com/mentoria-5", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 6, IdMentorado = 26, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 6, 6, 9, 0, 0), Link = "https://meet.mock.com/mentoria-6", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 7, IdMentorado = 27, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 7, 7, 10, 0, 0), Link = "https://meet.mock.com/mentoria-7", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 8, IdMentorado = 28, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 8, 8, 11, 0, 0), Link = "https://meet.mock.com/mentoria-8", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 9, IdMentorado = 29, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 9, 9, 12, 0, 0), Link = "https://meet.mock.com/mentoria-9", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 10, IdMentorado = 30, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 10, 10, 13, 0, 0), Link = "https://meet.mock.com/mentoria-10", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 11, IdMentorado = 31, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 11, 11, 9, 0, 0), Link = "https://meet.mock.com/mentoria-11", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 12, IdMentorado = 32, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 12, 12, 10, 0, 0), Link = "https://meet.mock.com/mentoria-12", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 13, IdMentorado = 33, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 1, 13, 11, 0, 0), Link = "https://meet.mock.com/mentoria-13", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 14, IdMentorado = 34, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 2, 14, 12, 0, 0), Link = "https://meet.mock.com/mentoria-14", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 15, IdMentorado = 35, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 3, 15, 13, 0, 0), Link = "https://meet.mock.com/mentoria-15", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 16, IdMentorado = 36, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 4, 16, 9, 0, 0), Link = "https://meet.mock.com/mentoria-16", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 17, IdMentorado = 37, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 5, 17, 10, 0, 0), Link = "https://meet.mock.com/mentoria-17", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 18, IdMentorado = 38, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 6, 18, 11, 0, 0), Link = "https://meet.mock.com/mentoria-18", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 19, IdMentorado = 39, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 7, 19, 12, 0, 0), Link = "https://meet.mock.com/mentoria-19", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 20, IdMentorado = 40, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 8, 20, 13, 0, 0), Link = "https://meet.mock.com/mentoria-20", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 21, IdMentorado = 41, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 9, 1, 9, 0, 0), Link = "https://meet.mock.com/mentoria-21", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 22, IdMentorado = 42, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 10, 2, 10, 0, 0), Link = "https://meet.mock.com/mentoria-22", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 23, IdMentorado = 43, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 11, 3, 11, 0, 0), Link = "https://meet.mock.com/mentoria-23", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 24, IdMentorado = 44, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 12, 4, 12, 0, 0), Link = "https://meet.mock.com/mentoria-24", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 25, IdMentorado = 45, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 1, 5, 13, 0, 0), Link = "https://meet.mock.com/mentoria-25", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 26, IdMentorado = 46, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 2, 6, 9, 0, 0), Link = "https://meet.mock.com/mentoria-26", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 27, IdMentorado = 47, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 3, 7, 10, 0, 0), Link = "https://meet.mock.com/mentoria-27", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 28, IdMentorado = 48, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 4, 8, 11, 0, 0), Link = "https://meet.mock.com/mentoria-28", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 29, IdMentorado = 49, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 5, 9, 12, 0, 0), Link = "https://meet.mock.com/mentoria-29", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 30, IdMentorado = 50, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 6, 10, 13, 0, 0), Link = "https://meet.mock.com/mentoria-30", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 31, IdMentorado = 51, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 7, 11, 9, 0, 0), Link = "https://meet.mock.com/mentoria-31", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 32, IdMentorado = 52, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 8, 12, 10, 0, 0), Link = "https://meet.mock.com/mentoria-32", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 33, IdMentorado = 53, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 9, 13, 11, 0, 0), Link = "https://meet.mock.com/mentoria-33", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 34, IdMentorado = 54, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 10, 14, 12, 0, 0), Link = "https://meet.mock.com/mentoria-34", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 35, IdMentorado = 55, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 11, 15, 13, 0, 0), Link = "https://meet.mock.com/mentoria-35", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 36, IdMentorado = 56, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 12, 16, 9, 0, 0), Link = "https://meet.mock.com/mentoria-36", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 37, IdMentorado = 57, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 1, 17, 10, 0, 0), Link = "https://meet.mock.com/mentoria-37", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 38, IdMentorado = 58, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 2, 18, 11, 0, 0), Link = "https://meet.mock.com/mentoria-38", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 39, IdMentorado = 59, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 3, 19, 12, 0, 0), Link = "https://meet.mock.com/mentoria-39", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 40, IdMentorado = 60, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 4, 20, 13, 0, 0), Link = "https://meet.mock.com/mentoria-40", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 41, IdMentorado = 61, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 5, 1, 9, 0, 0), Link = "https://meet.mock.com/mentoria-41", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 42, IdMentorado = 62, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 6, 2, 10, 0, 0), Link = "https://meet.mock.com/mentoria-42", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 43, IdMentorado = 63, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 7, 3, 11, 0, 0), Link = "https://meet.mock.com/mentoria-43", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 44, IdMentorado = 64, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 8, 4, 12, 0, 0), Link = "https://meet.mock.com/mentoria-44", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 45, IdMentorado = 65, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 9, 5, 13, 0, 0), Link = "https://meet.mock.com/mentoria-45", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 46, IdMentorado = 66, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 10, 6, 9, 0, 0), Link = "https://meet.mock.com/mentoria-46", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 47, IdMentorado = 67, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 11, 7, 10, 0, 0), Link = "https://meet.mock.com/mentoria-47", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 48, IdMentorado = 68, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 12, 8, 11, 0, 0), Link = "https://meet.mock.com/mentoria-48", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 49, IdMentorado = 69, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 1, 9, 12, 0, 0), Link = "https://meet.mock.com/mentoria-49", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 50, IdMentorado = 70, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 2, 10, 13, 0, 0), Link = "https://meet.mock.com/mentoria-50", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 51, IdMentorado = 71, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 3, 11, 9, 0, 0), Link = "https://meet.mock.com/mentoria-51", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 52, IdMentorado = 72, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 4, 12, 10, 0, 0), Link = "https://meet.mock.com/mentoria-52", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 53, IdMentorado = 73, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 5, 13, 11, 0, 0), Link = "https://meet.mock.com/mentoria-53", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 54, IdMentorado = 74, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 6, 14, 12, 0, 0), Link = "https://meet.mock.com/mentoria-54", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 55, IdMentorado = 75, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 7, 15, 13, 0, 0), Link = "https://meet.mock.com/mentoria-55", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 56, IdMentorado = 76, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 8, 16, 9, 0, 0), Link = "https://meet.mock.com/mentoria-56", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 57, IdMentorado = 77, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 9, 17, 10, 0, 0), Link = "https://meet.mock.com/mentoria-57", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 58, IdMentorado = 78, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 10, 18, 11, 0, 0), Link = "https://meet.mock.com/mentoria-58", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 59, IdMentorado = 79, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 11, 19, 12, 0, 0), Link = "https://meet.mock.com/mentoria-59", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 60, IdMentorado = 80, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 12, 20, 13, 0, 0), Link = "https://meet.mock.com/mentoria-60", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 61, IdMentorado = 81, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 1, 1, 9, 0, 0), Link = "https://meet.mock.com/mentoria-61", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 62, IdMentorado = 82, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 2, 2, 10, 0, 0), Link = "https://meet.mock.com/mentoria-62", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 63, IdMentorado = 83, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 3, 3, 11, 0, 0), Link = "https://meet.mock.com/mentoria-63", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 64, IdMentorado = 84, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 4, 4, 12, 0, 0), Link = "https://meet.mock.com/mentoria-64", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 65, IdMentorado = 85, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 5, 5, 13, 0, 0), Link = "https://meet.mock.com/mentoria-65", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 66, IdMentorado = 86, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 6, 6, 9, 0, 0), Link = "https://meet.mock.com/mentoria-66", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 67, IdMentorado = 87, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 7, 7, 10, 0, 0), Link = "https://meet.mock.com/mentoria-67", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 68, IdMentorado = 88, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 8, 8, 11, 0, 0), Link = "https://meet.mock.com/mentoria-68", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 69, IdMentorado = 89, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 9, 9, 12, 0, 0), Link = "https://meet.mock.com/mentoria-69", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 70, IdMentorado = 90, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 10, 10, 13, 0, 0), Link = "https://meet.mock.com/mentoria-70", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 71, IdMentorado = 91, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 11, 11, 9, 0, 0), Link = "https://meet.mock.com/mentoria-71", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 72, IdMentorado = 92, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 12, 12, 10, 0, 0), Link = "https://meet.mock.com/mentoria-72", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 73, IdMentorado = 93, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 1, 13, 11, 0, 0), Link = "https://meet.mock.com/mentoria-73", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 74, IdMentorado = 94, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 2, 14, 12, 0, 0), Link = "https://meet.mock.com/mentoria-74", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 75, IdMentorado = 95, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 3, 15, 13, 0, 0), Link = "https://meet.mock.com/mentoria-75", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 76, IdMentorado = 96, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 4, 16, 9, 0, 0), Link = "https://meet.mock.com/mentoria-76", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 77, IdMentorado = 97, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 5, 17, 10, 0, 0), Link = "https://meet.mock.com/mentoria-77", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 78, IdMentorado = 98, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 6, 18, 11, 0, 0), Link = "https://meet.mock.com/mentoria-78", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 79, IdMentorado = 99, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 7, 19, 12, 0, 0), Link = "https://meet.mock.com/mentoria-79", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 80, IdMentorado = 100, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 8, 20, 13, 0, 0), Link = "https://meet.mock.com/mentoria-80", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 81, IdMentorado = 101, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 9, 1, 9, 0, 0), Link = "https://meet.mock.com/mentoria-81", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 82, IdMentorado = 102, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 10, 2, 10, 0, 0), Link = "https://meet.mock.com/mentoria-82", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 83, IdMentorado = 103, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 11, 3, 11, 0, 0), Link = "https://meet.mock.com/mentoria-83", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 84, IdMentorado = 104, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 12, 4, 12, 0, 0), Link = "https://meet.mock.com/mentoria-84", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 85, IdMentorado = 105, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 1, 5, 13, 0, 0), Link = "https://meet.mock.com/mentoria-85", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 86, IdMentorado = 106, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 2, 6, 9, 0, 0), Link = "https://meet.mock.com/mentoria-86", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 87, IdMentorado = 107, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 3, 7, 10, 0, 0), Link = "https://meet.mock.com/mentoria-87", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 88, IdMentorado = 108, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 4, 8, 11, 0, 0), Link = "https://meet.mock.com/mentoria-88", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 89, IdMentorado = 109, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 5, 9, 12, 0, 0), Link = "https://meet.mock.com/mentoria-89", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 90, IdMentorado = 110, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 6, 10, 13, 0, 0), Link = "https://meet.mock.com/mentoria-90", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 91, IdMentorado = 111, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 7, 11, 9, 0, 0), Link = "https://meet.mock.com/mentoria-91", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 92, IdMentorado = 112, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 8, 12, 10, 0, 0), Link = "https://meet.mock.com/mentoria-92", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 93, IdMentorado = 113, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 9, 13, 11, 0, 0), Link = "https://meet.mock.com/mentoria-93", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 94, IdMentorado = 114, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 10, 14, 12, 0, 0), Link = "https://meet.mock.com/mentoria-94", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 95, IdMentorado = 115, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 11, 15, 13, 0, 0), Link = "https://meet.mock.com/mentoria-95", Descricao = "Planejamento dos próximos passos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 96, IdMentorado = 116, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 12, 16, 9, 0, 0), Link = "https://meet.mock.com/mentoria-96", Descricao = "Introdução e objetivos da mentoria", Status = "Concluída" },
+                new Mentoria { IdMentoria = 97, IdMentorado = 117, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 1, 17, 10, 0, 0), Link = "https://meet.mock.com/mentoria-97", Descricao = "Revisão de fundamentos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 98, IdMentorado = 118, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 2, 18, 11, 0, 0), Link = "https://meet.mock.com/mentoria-98", Descricao = "Resolução de exercícios práticos", Status = "Concluída" },
+                new Mentoria { IdMentoria = 99, IdMentorado = 119, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 3, 19, 12, 0, 0), Link = "https://meet.mock.com/mentoria-99", Descricao = "Análise de projeto", Status = "Concluída" },
+                new Mentoria { IdMentoria = 100, IdMentorado = 120, IdMentor = randomMentoria.Next(1, 21), HoraInicio = new DateTime(2026, 4, 20, 13, 0, 0), Link = "https://meet.mock.com/mentoria-100", Descricao = "Planejamento dos próximos passos", Status = "Concluída" }
             );
+            // Definindo dados iniciais para a tabela Anotacao
             modelBuilder.Entity<Anotacao>().HasData(
                 new Anotacao { IdAnotacao = 1, AnotacaoMentorado = "Anotação do mentorado referente à mentoria 1.", IdMentorado = 21, IdMentoria = 1 },
                 new Anotacao { IdAnotacao = 2, AnotacaoMentorado = "Anotação do mentorado referente à mentoria 2.", IdMentorado = 22, IdMentoria = 2 },
@@ -450,6 +467,7 @@ namespace PucPocVS.Models
                 new Anotacao { IdAnotacao = 99, AnotacaoMentorado = "Anotação do mentorado referente à mentoria 99.", IdMentorado = 44, IdMentoria = 99 },
                 new Anotacao { IdAnotacao = 100, AnotacaoMentorado = "Anotação do mentorado referente à mentoria 100.", IdMentorado = 45, IdMentoria = 100 }
             );
+            // Definindo dados iniciais para a tabela MaterialDeApoio
             modelBuilder.Entity<MaterialDeApoio>().HasData(
                 new MaterialDeApoio { IdMaterialApoio = 1, Titulo = "Material de Apoio 1", Material = "https://materiais.mock.com/material-1", IdMentor = 1, IdMentoria = 1 },
                 new MaterialDeApoio { IdMaterialApoio = 2, Titulo = "Material de Apoio 2", Material = "https://materiais.mock.com/material-2", IdMentor = 1, IdMentoria = 2 },
@@ -552,7 +570,8 @@ namespace PucPocVS.Models
                 new MaterialDeApoio { IdMaterialApoio = 99, Titulo = "Material de Apoio 99", Material = "https://materiais.mock.com/material-99", IdMentor = 20, IdMentoria = 99 },
                 new MaterialDeApoio { IdMaterialApoio = 100, Titulo = "Material de Apoio 100", Material = "https://materiais.mock.com/material-100", IdMentor = 20, IdMentoria = 100 }
             );
-            var random = new Random(42);
+            // Definindo dados iniciais para a tabela AvaliacaoMentoria
+            var random = new Random(42); // Seed fixo para garantir que os valores gerados sejam os mesmos a cada execução
             modelBuilder.Entity<AvaliacaoMentoria>().HasData(
                 new AvaliacaoMentoria { IdAvaliacaoMentoria = 1, IdMentoria = 1, IdMentorado = 21, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação da mentoria 1." },
                 new AvaliacaoMentoria { IdAvaliacaoMentoria = 2, IdMentoria = 2, IdMentorado = 22, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação da mentoria 2." },
@@ -655,6 +674,7 @@ namespace PucPocVS.Models
                 new AvaliacaoMentoria { IdAvaliacaoMentoria = 99, IdMentoria = 99, IdMentorado = 44, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação da mentoria 99." },
                 new AvaliacaoMentoria { IdAvaliacaoMentoria = 100, IdMentoria = 100, IdMentorado = 45, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação da mentoria 100." }
             );
+            // Definindo dados iniciais para a tabela AvaliacaoMentor
             modelBuilder.Entity<AvaliacaoMentor>().HasData(
                 new AvaliacaoMentor { IdAvaliacaoMentor = 1, IdMentor = 1, IdMentorado = 21, IdMentoria = 1, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação do mentor 1." },
                 new AvaliacaoMentor { IdAvaliacaoMentor = 2, IdMentor = 1, IdMentorado = 22, IdMentoria = 2, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação do mentor 1." },
@@ -757,6 +777,7 @@ namespace PucPocVS.Models
                 new AvaliacaoMentor { IdAvaliacaoMentor = 99, IdMentor = 20, IdMentorado = 44, IdMentoria = 99, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação do mentor 20." },
                 new AvaliacaoMentor { IdAvaliacaoMentor = 100, IdMentor = 20, IdMentorado = 45, IdMentoria = 100, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação do mentor 20." }
             );
+            // Definindo dados iniciais para a tabela AvaliacaoMaterial
             modelBuilder.Entity<AvaliacaoMaterial>().HasData(
                 new AvaliacaoMaterial { IdAvaliacaoMaterial = 1, IdMaterialApoio = 1, IdMentorado = 21, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação do material 1." },
                 new AvaliacaoMaterial { IdAvaliacaoMaterial = 2, IdMaterialApoio = 2, IdMentorado = 22, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação do material 2." },
@@ -858,69 +879,71 @@ namespace PucPocVS.Models
                 new AvaliacaoMaterial { IdAvaliacaoMaterial = 99, IdMaterialApoio = 99, IdMentorado = 44, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação do material 99." },
                 new AvaliacaoMaterial { IdAvaliacaoMaterial = 100, IdMaterialApoio = 100, IdMentorado = 45, Nota = random.Next(10, 51) / 10.0m, Comentario = "Avaliação do material 100." }
             );
+            // Definindo dados iniciais para a tabela Disponibilidade
             modelBuilder.Entity<Disponibilidade>().HasData(
-                new Disponibilidade { IdDisponibilidade = 4, IdMentor = 1, HoraInicio = new DateTime(2025, 1, 11, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 5, IdMentor = 1, HoraInicio = new DateTime(2025, 2, 11, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 6, IdMentor = 1, HoraInicio = new DateTime(2025, 3, 11, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 7, IdMentor = 2, HoraInicio = new DateTime(2025, 1, 12, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 8, IdMentor = 2, HoraInicio = new DateTime(2025, 2, 12, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 9, IdMentor = 2, HoraInicio = new DateTime(2025, 3, 12, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 10, IdMentor = 3, HoraInicio = new DateTime(2025, 1, 13, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 11, IdMentor = 3, HoraInicio = new DateTime(2025, 2, 13, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 12, IdMentor = 3, HoraInicio = new DateTime(2025, 3, 13, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 13, IdMentor = 4, HoraInicio = new DateTime(2025, 1, 14, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 14, IdMentor = 4, HoraInicio = new DateTime(2025, 2, 14, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 15, IdMentor = 4, HoraInicio = new DateTime(2025, 3, 14, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 16, IdMentor = 5, HoraInicio = new DateTime(2025, 1, 15, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 17, IdMentor = 5, HoraInicio = new DateTime(2025, 2, 15, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 18, IdMentor = 5, HoraInicio = new DateTime(2025, 3, 15, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 19, IdMentor = 6, HoraInicio = new DateTime(2025, 1, 16, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 20, IdMentor = 6, HoraInicio = new DateTime(2025, 2, 16, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 21, IdMentor = 6, HoraInicio = new DateTime(2025, 3, 16, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 22, IdMentor = 7, HoraInicio = new DateTime(2025, 1, 17, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 23, IdMentor = 7, HoraInicio = new DateTime(2025, 2, 17, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 24, IdMentor = 7, HoraInicio = new DateTime(2025, 3, 17, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 25, IdMentor = 8, HoraInicio = new DateTime(2025, 1, 18, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 26, IdMentor = 8, HoraInicio = new DateTime(2025, 2, 18, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 27, IdMentor = 8, HoraInicio = new DateTime(2025, 3, 18, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 28, IdMentor = 9, HoraInicio = new DateTime(2025, 1, 19, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 29, IdMentor = 9, HoraInicio = new DateTime(2025, 2, 19, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 30, IdMentor = 9, HoraInicio = new DateTime(2025, 3, 19, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 31, IdMentor = 10, HoraInicio = new DateTime(2025, 1, 20, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 32, IdMentor = 10, HoraInicio = new DateTime(2025, 2, 20, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 33, IdMentor = 10, HoraInicio = new DateTime(2025, 3, 20, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 34, IdMentor = 11, HoraInicio = new DateTime(2025, 1, 21, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 35, IdMentor = 11, HoraInicio = new DateTime(2025, 2, 21, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 36, IdMentor = 11, HoraInicio = new DateTime(2025, 3, 21, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 37, IdMentor = 12, HoraInicio = new DateTime(2025, 1, 22, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 38, IdMentor = 12, HoraInicio = new DateTime(2025, 2, 22, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 39, IdMentor = 12, HoraInicio = new DateTime(2025, 3, 22, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 40, IdMentor = 13, HoraInicio = new DateTime(2025, 1, 23, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 41, IdMentor = 13, HoraInicio = new DateTime(2025, 2, 23, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 42, IdMentor = 13, HoraInicio = new DateTime(2025, 3, 23, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 43, IdMentor = 14, HoraInicio = new DateTime(2025, 1, 24, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 44, IdMentor = 14, HoraInicio = new DateTime(2025, 2, 24, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 45, IdMentor = 14, HoraInicio = new DateTime(2025, 3, 24, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 46, IdMentor = 15, HoraInicio = new DateTime(2025, 1, 25, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 47, IdMentor = 15, HoraInicio = new DateTime(2025, 2, 25, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 48, IdMentor = 15, HoraInicio = new DateTime(2025, 3, 25, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 49, IdMentor = 16, HoraInicio = new DateTime(2025, 1, 26, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 50, IdMentor = 16, HoraInicio = new DateTime(2025, 2, 26, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 51, IdMentor = 16, HoraInicio = new DateTime(2025, 3, 26, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 52, IdMentor = 17, HoraInicio = new DateTime(2025, 1, 27, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 53, IdMentor = 17, HoraInicio = new DateTime(2025, 2, 27, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 54, IdMentor = 17, HoraInicio = new DateTime(2025, 3, 27, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 55, IdMentor = 18, HoraInicio = new DateTime(2025, 1, 28, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 56, IdMentor = 18, HoraInicio = new DateTime(2025, 2, 28, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 57, IdMentor = 18, HoraInicio = new DateTime(2025, 3, 28, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 58, IdMentor = 19, HoraInicio = new DateTime(2025, 1, 29, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 59, IdMentor = 19, HoraInicio = new DateTime(2025, 2, 28, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 60, IdMentor = 19, HoraInicio = new DateTime(2025, 3, 29, 15, 0, 0), IdDuracao = 4, Disponivel = false },
-                new Disponibilidade { IdDisponibilidade = 61, IdMentor = 20, HoraInicio = new DateTime(2025, 1, 30, 9, 0, 0), IdDuracao = 2, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 62, IdMentor = 20, HoraInicio = new DateTime(2025, 2, 28, 12, 0, 0), IdDuracao = 3, Disponivel = true },
-                new Disponibilidade { IdDisponibilidade = 63, IdMentor = 20, HoraInicio = new DateTime(2025, 3, 30, 15, 0, 0), IdDuracao = 4, Disponivel = false }
+                new Disponibilidade { IdDisponibilidade = 1, IdMentor = 1, HoraInicio = new DateTime(2026, 1, 11, 9, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 2, IdMentor = 1, HoraInicio = new DateTime(2026, 2, 11, 11, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 3, IdMentor = 1, HoraInicio = new DateTime(2026, 3, 11, 13, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 4, IdMentor = 2, HoraInicio = new DateTime(2026, 1, 12, 15, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 5, IdMentor = 2, HoraInicio = new DateTime(2026, 2, 12, 9, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 6, IdMentor = 2, HoraInicio = new DateTime(2026, 3, 12, 11, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 7, IdMentor = 3, HoraInicio = new DateTime(2026, 1, 13, 13, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 8, IdMentor = 3, HoraInicio = new DateTime(2026, 2, 13, 15, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 9, IdMentor = 3, HoraInicio = new DateTime(2026, 3, 13, 9, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 10, IdMentor = 4, HoraInicio = new DateTime(2026, 1, 14, 11, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 11, IdMentor = 4, HoraInicio = new DateTime(2026, 2, 14, 13, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 12, IdMentor = 4, HoraInicio = new DateTime(2026, 3, 14, 15, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 13, IdMentor = 5, HoraInicio = new DateTime(2026, 1, 15, 9, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 14, IdMentor = 5, HoraInicio = new DateTime(2026, 2, 15, 11, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 15, IdMentor = 5, HoraInicio = new DateTime(2026, 3, 15, 13, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 16, IdMentor = 6, HoraInicio = new DateTime(2026, 1, 16, 15, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 17, IdMentor = 6, HoraInicio = new DateTime(2026, 2, 16, 9, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 18, IdMentor = 6, HoraInicio = new DateTime(2026, 3, 16, 11, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 19, IdMentor = 7, HoraInicio = new DateTime(2026, 1, 17, 13, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 20, IdMentor = 7, HoraInicio = new DateTime(2026, 2, 17, 15, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 21, IdMentor = 7, HoraInicio = new DateTime(2026, 3, 17, 9, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 22, IdMentor = 8, HoraInicio = new DateTime(2026, 1, 18, 11, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 23, IdMentor = 8, HoraInicio = new DateTime(2026, 2, 18, 13, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 24, IdMentor = 8, HoraInicio = new DateTime(2026, 3, 18, 15, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 25, IdMentor = 9, HoraInicio = new DateTime(2026, 1, 19, 9, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 26, IdMentor = 9, HoraInicio = new DateTime(2026, 2, 19, 11, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 27, IdMentor = 9, HoraInicio = new DateTime(2026, 3, 19, 13, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 28, IdMentor = 10, HoraInicio = new DateTime(2026, 1, 20, 15, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 29, IdMentor = 10, HoraInicio = new DateTime(2026, 2, 20, 9, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 30, IdMentor = 10, HoraInicio = new DateTime(2026, 3, 20, 11, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 31, IdMentor = 11, HoraInicio = new DateTime(2026, 1, 21, 13, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 32, IdMentor = 11, HoraInicio = new DateTime(2026, 2, 21, 15, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 33, IdMentor = 11, HoraInicio = new DateTime(2026, 3, 21, 9, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 34, IdMentor = 12, HoraInicio = new DateTime(2026, 1, 22, 11, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 35, IdMentor = 12, HoraInicio = new DateTime(2026, 2, 22, 13, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 36, IdMentor = 12, HoraInicio = new DateTime(2026, 3, 22, 15, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 37, IdMentor = 13, HoraInicio = new DateTime(2026, 1, 23, 9, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 38, IdMentor = 13, HoraInicio = new DateTime(2026, 2, 23, 11, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 39, IdMentor = 13, HoraInicio = new DateTime(2026, 3, 23, 13, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 40, IdMentor = 14, HoraInicio = new DateTime(2026, 1, 24, 15, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 41, IdMentor = 14, HoraInicio = new DateTime(2026, 2, 24, 9, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 42, IdMentor = 14, HoraInicio = new DateTime(2026, 3, 24, 11, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 43, IdMentor = 15, HoraInicio = new DateTime(2026, 1, 25, 13, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 44, IdMentor = 15, HoraInicio = new DateTime(2026, 2, 25, 15, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 45, IdMentor = 15, HoraInicio = new DateTime(2026, 3, 25, 9, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 46, IdMentor = 16, HoraInicio = new DateTime(2026, 1, 26, 11, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 47, IdMentor = 16, HoraInicio = new DateTime(2026, 2, 26, 13, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 48, IdMentor = 16, HoraInicio = new DateTime(2026, 3, 26, 15, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 49, IdMentor = 17, HoraInicio = new DateTime(2026, 1, 27, 9, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 50, IdMentor = 17, HoraInicio = new DateTime(2026, 2, 27, 11, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 51, IdMentor = 17, HoraInicio = new DateTime(2026, 3, 27, 13, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 52, IdMentor = 18, HoraInicio = new DateTime(2026, 1, 28, 15, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 53, IdMentor = 18, HoraInicio = new DateTime(2026, 2, 28, 9, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 54, IdMentor = 18, HoraInicio = new DateTime(2026, 3, 28, 11, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 55, IdMentor = 19, HoraInicio = new DateTime(2026, 1, 29, 13, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 56, IdMentor = 19, HoraInicio = new DateTime(2026, 2, 28, 15, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 57, IdMentor = 19, HoraInicio = new DateTime(2026, 3, 29, 9, 0, 0), IdDuracao = 4, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 58, IdMentor = 20, HoraInicio = new DateTime(2026, 1, 30, 11, 0, 0), IdDuracao = 2, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 59, IdMentor = 20, HoraInicio = new DateTime(2026, 2, 28, 13, 0, 0), IdDuracao = 3, Disponivel = true },
+                new Disponibilidade { IdDisponibilidade = 60, IdMentor = 20, HoraInicio = new DateTime(2026, 3, 30, 15, 0, 0), IdDuracao = 4, Disponivel = true }
             );
         }
+        // Definindo dados iniciais para a tabela Usuario
         private Usuario CriarUsuario(int id, string nome, string email, string escolaridade)
         {
             return new Usuario
@@ -937,6 +960,7 @@ namespace PucPocVS.Models
                 DataCriacao = new DateTime(2024, 1, 1)
             };
         }
+        // Definindo dados iniciais para a tabela Usuario (Mentorado)
         private Usuario CriarUsuarioMentorado(int id, string nome, string email, string escolaridade)
         {
             return new Usuario
