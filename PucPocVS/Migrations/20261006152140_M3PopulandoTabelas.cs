@@ -1,5 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using PucPocVS.Models;
+using System;
 
 #nullable disable
 
@@ -67,6 +68,21 @@ namespace PucPocVS.Migrations
                     { 43, "Sim", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1990, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "helena.carvalho@email.com", "MC", 3, "Helena Carvalho", true, "SenhaPadrao123" },
                     { 44, "Sim", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1990, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "felipe.santos@email.com", "PG", 3, "Felipe Santos", true, "SenhaPadrao123" },
                     { 45, "Sim", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1990, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "luiza.ferreira@email.com", "ES", 3, "Luiza Ferreira", true, "SenhaPadrao123" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Duracoes",
+                columns: new[] { "IdDuracao", "Tempo" },
+                values: new object[,]
+                {
+                    { 1, 15 },
+                    { 2, 30 },
+                    { 3, 45 },
+                    { 4, 60 },
+                    { 5, 75 },
+                    { 6, 90 },
+                    { 7, 105 },
+                    { 8, 120 }
                 });
 
             migrationBuilder.InsertData(
